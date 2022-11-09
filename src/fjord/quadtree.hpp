@@ -21,7 +21,7 @@ namespace fjord
     public:
         Quadtree() = default;
 
-        void decode( Allocator*  pixelsAllocator,
+        void decode( Allocator*  pixels_allocator,
                      unsigned*   nodes,
                      int         col_count,
                      int         row_count,
@@ -29,7 +29,7 @@ namespace fjord
                      int         max_depth,
                      RangeBlock* blocks )
         {
-            allocator = pixelsAllocator;
+            allocator = pixels_allocator;
             current_block = blocks;
             current_node = nodes;
 
