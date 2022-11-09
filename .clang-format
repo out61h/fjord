@@ -1,0 +1,88 @@
+BasedOnStyle : WebKit
+
+# AlignConsecutiveAssignments : Consecutive
+# AlignConsecutiveBitFields : Consecutive 
+# AlignConsecutiveMacros : Consecutive
+AlignEscapedNewlines : Left
+AlignOperands : Align
+AlignTrailingComments : true
+AllowAllArgumentsOnNextLine : true
+AllowAllParametersOfDeclarationOnNextLine : false
+AllowShortBlocksOnASingleLine : Empty
+AllowShortCaseLabelsOnASingleLine : false
+AllowShortIfStatementsOnASingleLine : Never
+AllowShortLambdasOnASingleLine : Empty
+PenaltyReturnTypeOnItsOwnLine : 120
+BreakBeforeBinaryOperators : All
+BreakBeforeBraces : Allman
+IndentPPDirectives : BeforeHash
+PointerAlignment : Left
+
+##### Unsupported
+# AttributeMacros : []
+# BitFieldColonSpacing : After
+# BreakBeforeConceptDeclarations : true
+# EmptyLineBeforeAccessModifier : LogicalBlock
+# IndentRequires : false
+# SpaceBeforeCaseColon : false
+# SortIncludes : CaseSensitive
+# BreakBeforeBraces : Custom
+# BraceWrapping :
+#     AfterCaseLabel : true
+#     AfterClass : true
+#     AfterEnum : true
+#     AfterFunction : true
+#     AfterNamespace : true
+#     AfterStruct : true
+#     AfterUnion : true
+#     AfterExternBlock : true
+#     BeforeCatch : true
+#     BeforeElse : true
+#     BeforeLambdaBody : true
+#     BeforeWhile : true
+#     AfterControlStatement : Always
+#     IndentBraces : false
+#     SplitEmptyFunction : true
+#     SplitEmptyRecord : true
+#     SplitEmptyNamespace : true
+	
+##### Not applicable
+AllowAllConstructorInitializersOnNextLine : true
+SpaceBeforeCtorInitializerColon : false
+
+##### OK
+AlignAfterOpenBracket :	Align
+AlignConsecutiveDeclarations : Consecutive
+AllowShortEnumsOnASingleLine : false
+AllowShortFunctionsOnASingleLine : Empty
+AllowShortLoopsOnASingleLine : false
+AlwaysBreakAfterReturnType : None
+AlwaysBreakBeforeMultilineStrings : false
+AlwaysBreakTemplateDeclarations : Yes
+BinPackArguments : false
+BinPackParameters : false
+BreakBeforeTernaryOperators : true
+BreakConstructorInitializers : BeforeComma
+BreakInheritanceList : BeforeComma
+BreakStringLiterals : true
+ColumnLimit : 100
+CompactNamespaces : false
+ConstructorInitializerAllOnOneLineOrOnePerLine : false
+Cpp11BracedListStyle : true
+FixNamespaceComments : true
+IncludeBlocks : Preserve
+IndentCaseBlocks : false
+IndentCaseLabels : false
+IndentExternBlock : AfterExternBlock
+IndentGotoLabels : false
+IndentWrappedFunctionNames : false
+Language : Cpp
+KeepEmptyLinesAtTheStartOfBlocks : false
+NamespaceIndentation : All 
+SortUsingDeclarations : true
+SpaceAfterCStyleCast : false
+SpaceAfterLogicalNot : false
+SpaceAfterTemplateKeyword : false
+SpaceBeforeCpp11BracedList : false
+SpacesInParentheses : true
+UseTab : Never
