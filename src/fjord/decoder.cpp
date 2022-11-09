@@ -6,7 +6,7 @@
  * binary forms, with or without modification, are permitted exclusively
  * under the terms of the MIT license. You should have received a copy of the
  * license with this file. If not, please visit:
- * https://github.com/out61h/fjord/blob/main/LICENSE.
+ * https://github.com/out61h/fjord/blob/master/LICENSE
  */
 #include "decoder.hpp"
 #include "quadtree.hpp"

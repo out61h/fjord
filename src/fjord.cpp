@@ -6,7 +6,7 @@
  * binary forms, with or without modification, are permitted exclusively
  * under the terms of the MIT license. You should have received a copy of the
  * license with this file. If not, please visit:
- * https://github.com/out61h/fjord/blob/main/LICENSE.
+ * https://github.com/out61h/fjord/blob/master/LICENSE
  */
 #include <rtl/array.hpp>
 #include <rtl/memory.hpp>
@@ -104,7 +104,7 @@ void main()
             if ( g_picture->data
                  && ( !FJORD_ENABLE_STOP_AFTER_DECODING || g_iteration < g_iteration_count ) )
             {
-                // TODO: run iterating stage in separate thread, blit when ready
+                // TODO: run iterating stage in the separate thread, blit when ready
                 g_decoder.decode( 1,
                                   fjord::Decoder::PixelFormat::rgb888,
                                   output.screen.pixels,
