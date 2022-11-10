@@ -190,33 +190,58 @@ void fjord::image::crop_resize_adjust( const Image& source,
 void fjord::image::convert_yuv444_to_rgb888( const Image&  y_image,
                                              const Image&  u_image,
                                              const Image&  v_image,
-                                             rtl::uint8_t* rgb_pixels,
-                                             rtl::size_t   rgb_pixels_padding )
+                                             rtl::uint8_t* rgb_buffer,
+                                             int           rgb_buffer_width,
+                                             int           rgb_buffer_height,
+                                             rtl::size_t   rgb_buffer_stride )
 {
     RTL_ASSERT( y_image.rect().area() == u_image.rect().area() );
     RTL_ASSERT( u_image.rect().area() == v_image.rect().area() );
 
-    const int width = y_image.width();
-    const int height = y_image.height();
+    constexpr size_t rgb_pixel_size = 3;
+
+    const int yuv_width = y_image.width();
+    const int yuv_height = y_image.height();
+
+    const int rgb_border_width
+        = rgb_buffer_width > yuv_width ? ( rgb_buffer_width - yuv_width ) / 2 : 0;
+    const int rgb_border_height
+        = rgb_buffer_height > yuv_height ? ( rgb_buffer_height - yuv_height ) / 2 : 0;
+
+    const size_t rgb_x_offset = rgb_border_width * rgb_pixel_size;
+    const size_t rgb_y_offset = rgb_border_height * rgb_buffer_stride;
+    const size_t rgb_padding = rgb_buffer_stride > (size_t)yuv_width * rgb_pixel_size
+                                   ? rgb_buffer_stride - yuv_width * rgb_pixel_size
+                                   : 0;
+    rgb_buffer += rgb_y_offset + rgb_x_offset;
+
+    const int    yuv_scan_width = rtl::min( rgb_buffer_width, yuv_width );
+    const int    yuv_scan_height = rtl::min( rgb_buffer_height, yuv_height );
+    const size_t yuv_padding
+        = yuv_width > yuv_scan_width ? static_cast<size_t>( yuv_width - yuv_scan_width ) : 0;
 
     const auto* py = y_image.data();
     const auto* pu = u_image.data();
     const auto* pv = v_image.data();
 
-    for ( int cy = 0; cy < height; ++cy )
+    for ( int cy = 0; cy < yuv_scan_height; ++cy )
     {
-        for ( int cx = 0; cx < width; ++cx )
+        for ( int cx = 0; cx < yuv_scan_width; ++cx )
         {
             const auto y = *py++;
             const auto u = *pu++ - 0.5f;
             const auto v = *pv++ - 0.5f;
 
-            *rgb_pixels++ = pixel::to_uint8( y + u * 2.03211f );
-            *rgb_pixels++ = pixel::to_uint8( y - u * 0.39465f - v * 0.58060f );
-            *rgb_pixels++ = pixel::to_uint8( y + v * 1.13983f );
+            *rgb_buffer++ = pixel::to_uint8( y + u * 2.03211f );
+            *rgb_buffer++ = pixel::to_uint8( y - u * 0.39465f - v * 0.58060f );
+            *rgb_buffer++ = pixel::to_uint8( y + v * 1.13983f );
         }
 
-        rgb_pixels += rgb_pixels_padding;
+        py += yuv_padding;
+        pu += yuv_padding;
+        pv += yuv_padding;
+
+        rgb_buffer += rgb_padding;
     }
 }
 

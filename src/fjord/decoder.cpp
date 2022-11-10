@@ -483,11 +483,6 @@ void Decoder::decode( unsigned                     num_iterations,
     {
         RTL_LOG( "Converting YUV444 to RGB888..." );
 
-        const auto image_width = m_output_image_size.w;
-        const auto image_height = m_output_image_size.h;
-        const auto border_width = ( buffer_width - image_width ) / 2;
-        const auto border_height = ( buffer_height - image_height ) / 2;
-
         constexpr auto rgb888_size_in_bytes = 3;
 
         image::clear_rgb888( buffer_pixels,
@@ -495,14 +490,12 @@ void Decoder::decode( unsigned                     num_iterations,
                              buffer_height,
                              buffer_pitch_in_bytes - buffer_width * rgb888_size_in_bytes );
 
-        const auto h_offset_in_bytes = border_width * rgb888_size_in_bytes;
-        const auto v_offset_in_bytes = border_height * buffer_pitch_in_bytes;
-        const auto padding_in_bytes = buffer_pitch_in_bytes - image_width * rgb888_size_in_bytes;
-
         image::convert_yuv444_to_rgb888( m_buffer_images[Buffer::buffer_output_channel_y],
                                          m_buffer_images[Buffer::buffer_output_channel_u],
                                          m_buffer_images[Buffer::buffer_output_channel_v],
-                                         buffer_pixels + v_offset_in_bytes + h_offset_in_bytes,
-                                         padding_in_bytes );
+                                         buffer_pixels,
+                                         buffer_width,
+                                         buffer_height,
+                                         buffer_pitch_in_bytes );
     }
 }

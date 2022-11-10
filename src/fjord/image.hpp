@@ -143,7 +143,9 @@ namespace fjord
                                        const Image&  u_image,
                                        const Image&  v_image,
                                        rtl::uint8_t* rgb_pixels,
-                                       rtl::size_t   rgb_pixels_padding );
+                                       int           rgb_pixels_width,
+                                       int           rgb_pixels_height,
+                                       rtl::size_t   rgb_pixels_stride );
 
         void clear_rgb888( rtl::uint8_t* pixels, int width, int height, rtl::size_t padding );
 
