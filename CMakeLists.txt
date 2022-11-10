@@ -58,6 +58,10 @@ target_include_directories(${PROJECT_NAME}
         src
 )
 
+target_link_libraries(${PROJECT_NAME} 
+    rtl::rtl
+)
+
 if(MSVC)
     # TODO: Import some flags from RTL library
     target_compile_options(${PROJECT_NAME} 
@@ -119,9 +123,6 @@ if(MSVC)
     )
 endif()
 
-target_link_libraries(${PROJECT_NAME} 
-    rtl::rtl
-)
 
 ###################################################################################################
 # Typical segment names
