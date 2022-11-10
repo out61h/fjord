@@ -13,5 +13,4 @@ The resulting binary takes about 10 KiB of the disk space. And even lesser, abou
 ```
 - [ ] Support for platforms other than x86
 - [ ] Use window function that sums in 1
-- [ ] Fix MSVC warning D9025
 - [ ] Resolve TODOs from code

@@ -8,6 +8,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_LIST_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_LIST_DIR}/bin)
 
+macro(RemoveDebugCXXFlag flag)
+    string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+endmacro()
+
+macro(RemoveCXXFlag flag)
+    string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endmacro()
+
 option(RTL_ENABLE_ASSERT "Turn on assertions cheks with RTL_ASSERT macro." OFF)
 option(RTL_ENABLE_LOG "Enable logging to debug output with RTL_LOG macro." OFF)
 option(RTL_ENABLE_RUNTIME_TESTS "Enable runtime tests execution at program startup." OFF)
@@ -23,15 +31,18 @@ find_package(rtl REQUIRED)
 target_compile_definitions(${PROJECT_NAME} 
     PRIVATE      
         RTL_ENABLE_ASSERT=$<BOOL:${RTL_ENABLE_ASSERT}>
+        RTL_ENABLE_APP_FULLSCREEN=$<BOOL:${RTL_ENABLE_APP_FULLSCREEN}>
         RTL_ENABLE_LOG=$<BOOL:${RTL_ENABLE_LOG}>
         RTL_ENABLE_RUNTIME_TESTS=$<BOOL:${RTL_ENABLE_RUNTIME_TESTS}>
         RTL_ENABLE_WINAPI_DIAGNOSTICS=$<BOOL:${RTL_ENABLE_WINAPI_DIAGNOSTICS}>
-
-        RTL_ENABLE_APPLICATION=1
-        RTL_ENABLE_APPLICATION_CLOCK=1
-        RTL_ENABLE_APPLICATION_CURSOR=0
-        RTL_ENABLE_APPLICATION_KEYS=1
-        RTL_ENABLE_APPLICATION_OSD=1
+        
+        RTL_ENABLE_APP=1
+        RTL_ENABLE_APP_AUDIO=0
+        RTL_ENABLE_APP_CURSOR=!$<BOOL:${RTL_ENABLE_APP_FULLSCREEN}>
+        RTL_ENABLE_APP_CLOCK=1
+        RTL_ENABLE_APP_FIXED_WINDOW_SIZE=1
+        RTL_ENABLE_APP_KEYS=1
+        RTL_ENABLE_APP_OSD=1
         RTL_ENABLE_HEAP=1
         RTL_ENABLE_MEMSET=0
 
@@ -82,10 +93,10 @@ if(MSVC)
             /WX         # Treat warnings as errors.
     )
 
-    string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
-    string(REPLACE "/Od" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
-    string(REPLACE "/EHs" "" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-    
+    RemoveDebugCXXFlag("/RTC1")
+    RemoveCXXFlag("/EHsc")
+    message("MSVC flags: ${CMAKE_CXX_FLAGS}")
+
     # TODO: Add for debug config /DEBUG # Creates debugging information.
     # TODO: Move stub.bin to RTL (and import linker command from)
     # TODO: Import some flags from RTL library
