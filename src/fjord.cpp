@@ -38,9 +38,12 @@ static unsigned    g_iteration_count{ 0 };
 static int         g_clock_thirds{ 0 };
 static fjord::Size g_image_size;
 
-using TextLocation = rtl::application::output::osd::location;
+using rtl::application;
+using rtl::keyboard::keys;
 
-static constexpr int clock_measure = rtl::application::input::clock::measure;
+using TextLocation = application::output::osd::location;
+
+static constexpr int clock_measure = application::input::clock::measure;
 static constexpr int viewing_timeout_seconds = 5;
 
 void main()
@@ -53,17 +56,17 @@ void main()
     g_gallery = new Gallery;
     g_picture = new Picture;
 
-    rtl::application::instance().run(
+    application::instance().run(
         L"fjord",
-        []( const rtl::application::input& input, rtl::application::output& output )
+        []( const application::input& input, application::output& output )
         {
             bool next_picture = false;
 
-            if ( input.keys.pressed[(int)rtl::keyboard::keys::esc] )
+            if ( input.keys.pressed[(size_t)keys::esc] )
             {
-                return rtl::application::action::close;
+                return application::action::close;
             }
-            else if ( input.keys.pressed[(int)rtl::keyboard::keys::space] )
+            else if ( input.keys.pressed[(size_t)keys::space] )
             {
                 next_picture = true;
             }
@@ -145,6 +148,6 @@ void main()
                 rtl::wsprintf_s( output.osd.text[(size_t)TextLocation::bottom_left], u8"No data" );
             }
 
-            return rtl::application::action::none;
+            return application::action::none;
         } );
 }
