@@ -43,8 +43,9 @@ using rtl::keyboard::keys;
 
 using TextLocation = application::output::osd::location;
 
-static constexpr int clock_measure = application::input::clock::measure;
-static constexpr int viewing_timeout_seconds = 5;
+static constexpr int  clock_measure = application::input::clock::measure;
+static constexpr int  viewing_timeout_seconds = 5;
+static constexpr bool stop_after_decoding = FJORD_ENABLE_STOP_AFTER_DECODING;
 
 void main()
 {
@@ -104,8 +105,7 @@ void main()
                 }
             }
 
-            if ( g_picture->data
-                 && ( !FJORD_ENABLE_STOP_AFTER_DECODING || g_iteration < g_iteration_count ) )
+            if ( g_picture->data && ( !stop_after_decoding || g_iteration < g_iteration_count ) )
             {
                 // TODO: run iterating stage in the separate thread, blit when ready
                 g_decoder.decode( 1,
