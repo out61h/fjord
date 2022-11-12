@@ -59,8 +59,13 @@ void main()
 
     application::instance().run(
         L"fjord",
+        []()
+        {
+            g_picture->data.reset();
+        },
         []( const application::input& input, application::output& output )
         {
+            bool reload_picture = false;
             bool next_picture = false;
 
             if ( input.keys.pressed[(size_t)keys::esc] )
@@ -70,20 +75,26 @@ void main()
             else if ( input.keys.pressed[(size_t)keys::space] )
             {
                 next_picture = true;
+                reload_picture = true;
             }
 
             if ( g_clock_thirds && input.clock.thirds >= g_clock_thirds )
             {
                 next_picture = true;
+                reload_picture = true;
+            }
+
+            if ( reload_picture )
+            {
+                g_picture->data.reset();
+                g_clock_thirds = 0;
+                g_iteration = 0;
+                g_iteration_count = 0;
             }
 
             if ( next_picture )
             {
-                g_picture->data.reset();
                 g_gallery->next();
-                g_clock_thirds = 0;
-                g_iteration = 0;
-                g_iteration_count = 0;
             }
 
             if ( !g_picture->data )
