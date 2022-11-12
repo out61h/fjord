@@ -17,6 +17,8 @@ macro(RemoveCXXFlag flag)
 endmacro()
 
 option(RTL_ENABLE_ASSERT "Turn on assertions cheks with RTL_ASSERT macro." OFF)
+option(RTL_ENABLE_APP_FULLSCREEN "Start app in fullscreen mode." OFF)
+option(RTL_ENABLE_APP_RESIZE "Enable application window resizing." OFF)
 option(RTL_ENABLE_LOG "Enable logging to debug output with RTL_LOG macro." OFF)
 option(RTL_ENABLE_RUNTIME_TESTS "Enable runtime tests execution at program startup." OFF)
 option(RTL_ENABLE_WINAPI_DIAGNOSTICS "Enable checking the result of internal WinAPI calls." OFF)
@@ -33,6 +35,7 @@ target_compile_definitions(${PROJECT_NAME}
         RTL_ENABLE_ASSERT=$<BOOL:${RTL_ENABLE_ASSERT}>
         RTL_ENABLE_APP_FULLSCREEN=$<BOOL:${RTL_ENABLE_APP_FULLSCREEN}>
         RTL_ENABLE_LOG=$<BOOL:${RTL_ENABLE_LOG}>
+        RTL_ENABLE_APP_RESIZE=$<BOOL:${RTL_ENABLE_APP_RESIZE}>
         RTL_ENABLE_RUNTIME_TESTS=$<BOOL:${RTL_ENABLE_RUNTIME_TESTS}>
         RTL_ENABLE_WINAPI_DIAGNOSTICS=$<BOOL:${RTL_ENABLE_WINAPI_DIAGNOSTICS}>
         
@@ -40,7 +43,6 @@ target_compile_definitions(${PROJECT_NAME}
         RTL_ENABLE_APP_AUDIO=0
         RTL_ENABLE_APP_CURSOR=!$<BOOL:${RTL_ENABLE_APP_FULLSCREEN}>
         RTL_ENABLE_APP_CLOCK=1
-        RTL_ENABLE_APP_RESIZE=1
         RTL_ENABLE_APP_KEYS=1
         RTL_ENABLE_APP_OSD=1
         RTL_ENABLE_HEAP=1
