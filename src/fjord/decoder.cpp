@@ -24,7 +24,7 @@ namespace
         static_assert( BitCount > 1 );
         static_assert( BitCount < sizeof( q_value ) * 8 );
 
-        const int quantizer = ( 1 << ( BitCount - 1 ) ) - 1;
+        constexpr int quantizer = ( 1 << ( BitCount - 1 ) ) - 1;
 
         return max_value * q_value / quantizer;
     }
@@ -254,7 +254,7 @@ label:
     {
         RTL_LOG( "Init image buffers..." );
 
-        for ( int i = 0; i < Buffer::buffer_ifs_count; ++i )
+        for ( int i = 0; i < buffer_ifs_count; ++i )
         {
             m_buffer_images[i].init( Rect::create( 0, 0, m_ifs_size.w, m_ifs_size.h ),
                                      m_allocator );
@@ -262,7 +262,7 @@ label:
 
         for ( int i = 0; i < m_image_info->image_channels_count; ++i )
         {
-            m_buffer_images[i + Buffer::buffer_output_channel_base].init(
+            m_buffer_images[i + buffer_output_channel_base].init(
                 Rect::create( 0, 0, m_output_image_size.w, m_output_image_size.h ), m_allocator );
         }
     }
@@ -346,6 +346,8 @@ label:
                         mask_image.end(),
                         []( const Pixel& pix )
                         {
+                            // NOTE: clamping pixel value to the minimal value of the fixed point
+                            // number to avoid division by zero
                             return Pixel( 1 ) / rtl::clamp( pix, Pixel::min(), Pixel::max() );
                         } );
     }
@@ -374,12 +376,12 @@ const Image* Decoder::iterate( unsigned num_iterations )
             auto& block = m_ifs_blocks[i];
 
             // Crop, resize, adjust and transform the block of the input image
-            image::affine_transformation( *input_image,
-                                          block.transform.geometry,
-                                          block.transform.contrast,
-                                          block.transform.brightness,
-                                          block.transform.symmetry,
-                                          block.original_image );
+            image::transform_affinity( *input_image,
+                                       block.transform.geometry,
+                                       block.transform.contrast,
+                                       block.transform.brightness,
+                                       block.transform.symmetry,
+                                       block.original_image );
 
             // Expands image with a border replicating boundary pixels
             image::expand_borders( block.original_image, block.bordered_image );
@@ -394,7 +396,7 @@ const Image* Decoder::iterate( unsigned num_iterations )
         // Normalize the output image after block boundaries bluring
         output_image->mul( mask_image );
 
-        // Add some noise to the output image
+        // Add some uniform noise to the output image for visual sharping
         rtl::transform( output_image->begin(),
                         output_image->end(),
                         [this]( const Pixel& pix )
@@ -458,7 +460,7 @@ void Decoder::decode( unsigned                     num_iterations,
             const Pixel output_brightness
                 = Pixel::from_fraction( channel_info.brightness_shift, uint16_max_value );
 
-            auto& output_image = m_buffer_images[i + Buffer::buffer_output_channel_base];
+            auto& output_image = m_buffer_images[i + buffer_output_channel_base];
 
             // TODO: %f for adjust
             RTL_LOG( "Channel #%i: Crop(%i,%i %ix%i) -> Resize(%ix%i) -> Adjust(x*%i/256+%i)",
@@ -490,9 +492,9 @@ void Decoder::decode( unsigned                     num_iterations,
                              buffer_height,
                              buffer_pitch_in_bytes - buffer_width * rgb888_size_in_bytes );
 
-        image::convert_yuv444_to_rgb888( m_buffer_images[Buffer::buffer_output_channel_y],
-                                         m_buffer_images[Buffer::buffer_output_channel_u],
-                                         m_buffer_images[Buffer::buffer_output_channel_v],
+        image::convert_yuv444_to_rgb888( m_buffer_images[buffer_output_channel_y],
+                                         m_buffer_images[buffer_output_channel_u],
+                                         m_buffer_images[buffer_output_channel_v],
                                          buffer_pixels,
                                          buffer_width,
                                          buffer_height,

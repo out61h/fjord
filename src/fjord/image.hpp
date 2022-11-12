@@ -124,12 +124,12 @@ namespace fjord
 
     namespace image
     {
-        void affine_transformation( const Image& source,
-                                    const Rect&  translation,
-                                    Pixel        contrast,
-                                    Pixel        brightness,
-                                    Symmetry     symmetry,
-                                    Image&       output );
+        void transform_affinity( const Image& source,
+                                 const Rect&  translation,
+                                 Pixel        contrast,
+                                 Pixel        brightness,
+                                 Symmetry     symmetry,
+                                 Image&       output );
 
         void expand_borders( const Image& sorce, Image& output );
 

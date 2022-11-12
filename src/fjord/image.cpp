@@ -108,7 +108,7 @@ static constexpr rtl::int8_t transform_matrices [(int)Symmetry::count][8]
 };
 // clang-format on
 
-void fjord::image::affine_transformation( const Image& source,
+void fjord::image::transform_affinity( const Image& source,
                                           const Rect&  translation,
                                           Pixel        contrast,
                                           Pixel        brightness,
