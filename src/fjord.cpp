@@ -72,6 +72,12 @@ void main()
             {
                 return application::action::close;
             }
+#if RTL_ENABLE_APP_RESIZE
+            else if ( input.keys.pressed[(size_t)keys::enter] )
+            {
+                return application::action::toggle_fullscreen;
+            }
+#endif
             else if ( input.keys.pressed[(size_t)keys::space] )
             {
                 next_picture = true;
