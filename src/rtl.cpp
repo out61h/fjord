@@ -8,4 +8,7 @@
  * license with this file. If not, please visit:
  * https://github.com/out61h/fjord/blob/master/LICENSE
  */
+
+// NOTE: It's better to include this to separate translation module to prevent global namespace
+// pollution with the stuff from <Windows.h>
 #include <rtl/sys/impl.hpp>
