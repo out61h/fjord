@@ -59,7 +59,7 @@ void main()
 
     application::instance().run(
         L"fjord",
-        []()
+        []( const application::input& )
         {
             g_picture->data.reset();
         },
@@ -115,7 +115,7 @@ void main()
                     // TODO: pass data size and check boundaries
                     g_iteration_count = g_decoder.load(
                         g_picture->data.get(),
-                        fjord::Size::create( output.screen.width, output.screen.height ),
+                        fjord::Size::create( input.screen.width, input.screen.height ),
                         &g_image_size );
                     g_iteration = 0;
                     g_clock_thirds = input.clock.thirds + viewing_timeout_seconds * clock_measure;
@@ -127,10 +127,10 @@ void main()
                 // TODO: run iterating stage in the separate thread, blit when ready
                 g_decoder.decode( 1,
                                   fjord::Decoder::PixelFormat::rgb888,
-                                  output.screen.pixels,
-                                  output.screen.width,
-                                  output.screen.height,
-                                  output.screen.pitch );
+                                  input.screen.pixels,
+                                  input.screen.width,
+                                  input.screen.height,
+                                  input.screen.pitch );
 
                 if ( g_iteration < g_iteration_count )
                     g_iteration++;
