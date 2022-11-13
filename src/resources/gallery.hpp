@@ -10,14 +10,20 @@
  */
 #pragma once
 
+#include <rtl/array.hpp>
 #include <rtl/int.hpp>
+#include <rtl/pair.hpp>
 
 using PictureDeleter = void ( * )( const rtl::uint8_t* );
 using PictureData = rtl::unique_ptr<const rtl::uint8_t[], PictureDeleter>;
 
 struct Picture
 {
-    Picture() = default;
+    explicit Picture( PictureDeleter deleter )
+        : data( nullptr, deleter )
+        , size( 0 )
+    {
+    }
 
     PictureData data;
     size_t      size;
@@ -47,9 +53,13 @@ public:
     Picture picture()
     {
         if ( m_iterator == m_array.end() )
-            return Picture();
+            return Picture( dummy_array_deleter );
 
-        return Picture( *m_iterator, dummy_array_deleter );
+        Picture picture( dummy_array_deleter );
+        picture.data.reset( m_iterator->first );
+        picture.size = m_iterator->second;
+
+        return picture;
     }
 
 private:
@@ -58,10 +68,11 @@ private:
         // do nothing
     }
 
-    using Array = rtl::array<const rtl::uint8_t*, 2>;
+    using Array = rtl::array<rtl::pair<const rtl::uint8_t*, size_t>, 2>;
     using Iterator = Array::iterator;
 
-    Array    m_array{ f_data1, f_data2 };
+    Array    m_array{ rtl::make_pair<const rtl::uint8_t*, size_t>( f_data1, f_data1_size ),
+                   rtl::make_pair<const rtl::uint8_t*, size_t>( f_data2, f_data2_size ) };
     Iterator m_iterator;
 };
 
@@ -91,7 +102,7 @@ public:
     Picture picture()
     {
         if ( m_iterator == Iterator() )
-            return Picture();
+            return Picture( default_array_deleter );
 
         const Entry& entry = *m_iterator;
 
@@ -106,9 +117,10 @@ public:
             = rtl::filesystem::read_file_content( entry.path().c_str(), buffer, file_size );
         RTL_ASSERT( bytes_read == file_size );
 
-        Picture picture;
-        picture.data = PictureData( buffer, default_array_deleter );
+        Picture picture( default_array_deleter );
+        picture.data.reset( buffer );
         picture.size = bytes_read;
+
         return picture;
     }
 

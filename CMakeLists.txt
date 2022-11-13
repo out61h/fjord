@@ -28,6 +28,7 @@ aux_source_directory(src/fjord SOURCES)
 
 add_executable( ${PROJECT_NAME} WIN32 ${SOURCES} )
 
+# TODO: specify min version
 find_package(rtl REQUIRED)
 
 target_compile_definitions(${PROJECT_NAME} 
@@ -46,7 +47,9 @@ target_compile_definitions(${PROJECT_NAME}
         RTL_ENABLE_APP_KEYS=1
         RTL_ENABLE_APP_OSD=1
         RTL_ENABLE_APP_OPENGL=0
+        RTL_ENABLE_APP_OPENGL_VSYNC=0
         RTL_ENABLE_APP_SCREEN_BUFFER=1
+        RTL_ENABLE_APP_SINGLETON=1
         RTL_ENABLE_HEAP=1
         RTL_ENABLE_MEMSET=0
 

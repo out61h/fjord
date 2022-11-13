@@ -55,7 +55,7 @@ void main()
 
     // NOTE: We want to reduce binary size, so we don't care about memory leaks
     g_gallery = new Gallery;
-    g_picture = new Picture;
+    g_picture = new Picture( g_gallery->picture() );
 
     application::instance().run(
         L"fjord",
