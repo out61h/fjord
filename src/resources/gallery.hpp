@@ -14,12 +14,12 @@
 #include <rtl/int.hpp>
 #include <rtl/pair.hpp>
 
-using PictureDeleter = void ( * )( const rtl::uint8_t* );
-using PictureData = rtl::unique_ptr<const rtl::uint8_t[], PictureDeleter>;
+using PictureDataDeleter = void ( * )( const rtl::uint8_t* );
+using PictureData = rtl::unique_ptr<const rtl::uint8_t[], PictureDataDeleter>;
 
 struct Picture
 {
-    explicit Picture( PictureDeleter deleter )
+    explicit Picture( PictureDataDeleter deleter )
         : data( nullptr, deleter )
         , size( 0 )
     {
@@ -52,10 +52,11 @@ public:
 
     Picture picture()
     {
-        if ( m_iterator == m_array.end() )
-            return Picture( dummy_array_deleter );
-
         Picture picture( dummy_array_deleter );
+
+        if ( m_iterator == m_array.end() )
+            return picture;
+
         picture.data.reset( m_iterator->first );
         picture.size = m_iterator->second;
 
@@ -71,6 +72,7 @@ private:
     using Array = rtl::array<rtl::pair<const rtl::uint8_t*, size_t>, 2>;
     using Iterator = Array::iterator;
 
+    // TODO: initialize rtl::pair from {}
     Array    m_array{ rtl::make_pair<const rtl::uint8_t*, size_t>( f_data1, f_data1_size ),
                    rtl::make_pair<const rtl::uint8_t*, size_t>( f_data2, f_data2_size ) };
     Iterator m_iterator;
@@ -106,9 +108,9 @@ public:
 
         const Entry& entry = *m_iterator;
 
-        size_t file_size = static_cast<size_t>( entry.file_size() );
+        const size_t file_size = static_cast<size_t>( entry.file_size() );
 
-        // TODO: Remove %S (use conversion)
+        // TODO: Replace %S by %s and use conversion wide string -> mb string
         RTL_LOG( "Reading %i bytes from file '%S'...", file_size, entry.path().c_str() );
 
         rtl::uint8_t* buffer = new rtl::uint8_t[file_size];

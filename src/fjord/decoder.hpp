@@ -26,7 +26,7 @@ namespace fjord
         /**
          * @brief Constructor.
          *
-         * @note Constructor is defaulting to make able the class instance be declared as global
+         * @note Constructor is defaulting to make able the class instance to be declared as global
          * static variable. Use \reset method for "cold" initialization.
          */
         Decoder() = default;
