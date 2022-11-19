@@ -39,7 +39,7 @@ static int         g_clock_thirds{ 0 };
 static fjord::Size g_image_size;
 
 using rtl::application;
-using rtl::keyboard::keys;
+using namespace rtl::keyboard;
 
 using TextLocation = application::output::osd::location;
 
@@ -68,17 +68,17 @@ void main()
             bool reload_picture = false;
             bool next_picture = false;
 
-            if ( input.keys.pressed[(size_t)keys::esc] )
+            if ( input.keys.pressed[keys::escape] )
             {
                 return application::action::close;
             }
 #if RTL_ENABLE_APP_RESIZE
-            else if ( input.keys.pressed[(size_t)keys::enter] )
+            else if ( input.keys.pressed[keys::enter] )
             {
                 return application::action::toggle_fullscreen;
             }
 #endif
-            else if ( input.keys.pressed[(size_t)keys::space] )
+            else if ( input.keys.pressed[keys::space] )
             {
                 next_picture = true;
                 reload_picture = true;
