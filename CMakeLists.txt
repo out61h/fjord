@@ -71,6 +71,14 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if(MSVC)
+    # MSVC compiler inserts call to memset when generates code.
+    # Can't define your own version of the memset without dislabling whole program optimization.
+    # So we link our program with VC runtime (statically) and linker will see memset implementation.
+    target_link_libraries(${PROJECT_NAME} 
+        libvcruntime
+        libcmt
+    )
+
     # TODO: Import some flags from RTL library
     target_compile_options(${PROJECT_NAME} 
         PRIVATE
