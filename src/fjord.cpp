@@ -110,7 +110,7 @@ void main()
             {
                 rtl::wsprintf_s( output.osd.text[(size_t)TextLocation::top_right], u8"· 𝐹𝐽𝑂𝑅𝐷 ·" );
                 rtl::wsprintf_s( output.osd.text[(size_t)TextLocation::bottom_right],
-                                 u8"⌨ · 𝑆𝑃𝐴𝐶𝐸 · 𝐸𝑆𝐶 ·" );
+                                 u8"⌨ · 𝑆𝑃𝐴𝐶𝐸 · 𝐸𝑆𝐶 · 𝑅𝐸𝑇𝑈𝑅𝑁 ·" );
 
                 *g_picture = g_gallery->picture();
                 if ( g_picture->data )
