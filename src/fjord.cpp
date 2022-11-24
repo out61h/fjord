@@ -169,5 +169,6 @@ void main()
             }
 
             return application::action::none;
-        } );
+        },
+        nullptr );
 }

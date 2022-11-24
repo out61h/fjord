@@ -103,6 +103,8 @@ public:
 
     Picture picture()
     {
+        using rtl::filesystem::file;
+
         if ( m_iterator == Iterator() )
             return Picture( default_array_deleter );
 
@@ -115,8 +117,10 @@ public:
 
         rtl::uint8_t* buffer = new rtl::uint8_t[file_size];
 
-        [[maybe_unused]] auto bytes_read
-            = rtl::filesystem::read_file_content( entry.path().c_str(), buffer, file_size );
+        file f = file::open(
+            entry.path().c_str(), file::access::read_only, file::mode::open_existing );
+
+        [[maybe_unused]] auto bytes_read = f.read( buffer, file_size );
         RTL_ASSERT( bytes_read == file_size );
 
         Picture picture( default_array_deleter );
