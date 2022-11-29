@@ -11,6 +11,7 @@ The resulting binary takes about 12 KiB of the disk space. And even lesser, ~8 K
 ## TODO
 
 ```
+- [ ] Fix RIFF FJORD file format (add pad bytes if the chunk size is not even)
 - [ ] Support for platforms other than x86
 - [ ] Use window function that sums in 1
 - [ ] Resolve TODOs from code

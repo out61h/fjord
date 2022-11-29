@@ -13,9 +13,12 @@
 #include <rtl/array.hpp>
 #include <rtl/int.hpp>
 #include <rtl/pair.hpp>
+#include <rtl/sys/filesystem.hpp>
 
 using PictureDataDeleter = void ( * )( const rtl::uint8_t* );
 using PictureData = rtl::unique_ptr<const rtl::uint8_t[], PictureDataDeleter>;
+
+using rtl::filesystem::file;
 
 struct Picture
 {
@@ -155,9 +158,13 @@ private:
 
         rtl::uint32_t buffer;
 
-        [[maybe_unused]] auto bytes_read = rtl::filesystem::read_file_content(
-            entry.path().c_str(), &buffer, sizeof( rtl::uint32_t ) );
-        RTL_ASSERT( bytes_read == sizeof( rtl::uint32_t ) );
+        file f = file::open(
+            entry.path().c_str(), file::access::read_only, file::mode::open_existing );
+        if ( !f )
+            return false;
+
+        [[maybe_unused]] auto bytes_read = f.read( &buffer, sizeof( buffer ) );
+        RTL_ASSERT( bytes_read == sizeof( buffer ) );
 
         return buffer == fjord::format::signatures::pifs;
     }

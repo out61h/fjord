@@ -41,8 +41,6 @@ static fjord::Size g_image_size;
 using rtl::application;
 using namespace rtl::keyboard;
 
-static application::params g_app_params{ 0 };
-
 using TextLocation = application::output::osd::location;
 
 static constexpr int  clock_measure = application::input::clock::measure;
@@ -61,8 +59,8 @@ void main()
 
     application::instance().run(
         L"fjord",
-        g_app_params,
-        []( const application::input& )
+        nullptr,
+        []( const application::environment&, const application::input& )
         {
             g_picture->data.reset();
         },
