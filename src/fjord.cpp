@@ -9,6 +9,7 @@
  * https://github.com/out61h/fjord/blob/master/LICENSE
  */
 #include <rtl/array.hpp>
+#include <rtl/chrono.hpp>
 #include <rtl/memory.hpp>
 #include <rtl/random.hpp>
 
@@ -22,6 +23,10 @@
 
 #include "resources/gallery.hpp"
 
+using rtl::application;
+using namespace rtl::keyboard;
+using namespace rtl::chrono;
+
 // NOTE: We want to save CPU instructions on variable initialization and reduce binary size.
 // So variables declared as static globals.
 // In some cases the linker even can put variables into .bss segment, which typically stores only
@@ -33,19 +38,16 @@ static fjord::Decoder g_decoder;
 static Gallery* g_gallery{ nullptr };
 static Picture* g_picture{ nullptr };
 
-static unsigned    g_iteration{ 0 };
-static unsigned    g_iteration_count{ 0 };
-static int         g_clock_thirds{ 0 };
-static fjord::Size g_image_size;
+static unsigned g_iteration{ 0 };
+static unsigned g_iteration_count{ 0 };
 
-using rtl::application;
-using namespace rtl::keyboard;
+static thirds      g_image_time_to_change{ 0 };
+static fjord::Size g_image_size;
 
 using TextLocation = application::output::osd::location;
 
-static constexpr int  clock_measure = application::input::clock::measure;
-static constexpr int  viewing_timeout_seconds = 5;
-static constexpr bool stop_after_decoding = FJORD_ENABLE_STOP_AFTER_DECODING;
+static constexpr seconds viewing_timeout{ 5 };
+static constexpr bool    stop_after_decoding = FJORD_ENABLE_STOP_AFTER_DECODING;
 
 void main()
 {
@@ -85,7 +87,8 @@ void main()
                 reload_picture = true;
             }
 
-            if ( g_clock_thirds && input.clock.thirds >= g_clock_thirds )
+            if ( g_image_time_to_change.count()
+                 && thirds( input.clock.third_ticks ) >= g_image_time_to_change )
             {
                 next_picture = true;
                 reload_picture = true;
@@ -94,7 +97,7 @@ void main()
             if ( reload_picture )
             {
                 g_picture->data.reset();
-                g_clock_thirds = 0;
+                g_image_time_to_change = thirds();
                 g_iteration = 0;
                 g_iteration_count = 0;
             }
@@ -119,7 +122,7 @@ void main()
                         fjord::Size::create( input.screen.width, input.screen.height ),
                         &g_image_size );
                     g_iteration = 0;
-                    g_clock_thirds = input.clock.thirds + viewing_timeout_seconds * clock_measure;
+                    g_image_time_to_change = thirds( input.clock.third_ticks ) + viewing_timeout;
                 }
             }
 
@@ -137,14 +140,15 @@ void main()
                     g_iteration++;
             }
 
-            if ( g_clock_thirds )
+            if ( g_image_time_to_change.count() )
             {
-                const int seconds = ( ( g_clock_thirds - input.clock.thirds ) / clock_measure );
-                const int thirds = ( ( g_clock_thirds - input.clock.thirds ) % clock_measure );
+                const thirds remaining_time
+                    = g_image_time_to_change - thirds( input.clock.third_ticks );
+
                 rtl::wsprintf_s( output.osd.text[(size_t)TextLocation::top_left],
                                  u8"%i″%02i‴",
-                                 seconds,
-                                 thirds );
+                                 remaining_time.count() / thirds::period::den,
+                                 remaining_time.count() % thirds::period::den );
             }
             else
             {
