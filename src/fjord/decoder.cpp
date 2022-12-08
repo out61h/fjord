@@ -396,7 +396,7 @@ const Image* Decoder::iterate( unsigned num_iterations )
         // Normalize the output image after block boundaries bluring
         output_image->mul( mask_image );
 
-        // Add some uniform noise to the output image for visual sharping
+        // Add some uniform noise to the output image for visual sharpening
         rtl::transform( output_image->begin(),
                         output_image->end(),
                         [this]( const Pixel& pix )
