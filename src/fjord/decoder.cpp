@@ -221,7 +221,7 @@ unsigned Decoder::load( const rtl::uint8_t* data, const Size& target_size, Size*
             for ( rtl::size_t bit_index = 0; bit_index < 8 * sizeof( rtl::uint8_t ); ++bit_index )
             {
                 // NOTE: We spend 4 bytes to store 1 bit flag but it's noticeably reduce the size of
-                // assembled code that working with this flag
+                // assembled code that works with this flag
                 m_ifs_nodes[node_index] = partition_mask & 1u;
                 partition_mask >>= 1;
 
