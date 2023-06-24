@@ -1,6 +1,6 @@
-cmake_minimum_required( VERSION 3.11 )
+cmake_minimum_required(VERSION 3.11)
 
-project( fjord LANGUAGES C CXX )
+project(fjord LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_LIST_DIR}/bin)
@@ -26,20 +26,20 @@ option(RTL_ENABLE_RUNTIME_TESTS "Enable runtime tests execution at program start
 aux_source_directory(src/ SOURCES)
 aux_source_directory(src/fjord SOURCES)
 
-add_executable( ${PROJECT_NAME} WIN32 ${SOURCES} )
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
 
 # TODO: specify min version
 find_package(rtl REQUIRED)
 
-target_compile_definitions(${PROJECT_NAME} 
-    PRIVATE      
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE
         RTL_ENABLE_ASSERT=$<BOOL:${RTL_ENABLE_ASSERT}>
         RTL_ENABLE_APP_FULLSCREEN=$<BOOL:${RTL_ENABLE_APP_FULLSCREEN}>
         RTL_ENABLE_APP_RESIZE=$<BOOL:${RTL_ENABLE_APP_RESIZE}>
         RTL_ENABLE_LOG=$<BOOL:${RTL_ENABLE_LOG}>
         RTL_ENABLE_RUNTIME_CHECKS=$<BOOL:${RTL_ENABLE_RUNTIME_CHECKS}>
         RTL_ENABLE_RUNTIME_TESTS=$<BOOL:${RTL_ENABLE_RUNTIME_TESTS}>
-        
+
         RTL_ENABLE_APP=1
         RTL_ENABLE_APP_AUDIO=0
         RTL_ENABLE_APP_CURSOR=1
@@ -52,6 +52,7 @@ target_compile_definitions(${PROJECT_NAME}
         RTL_ENABLE_APP_RESOURCES=0
         RTL_ENABLE_APP_SCREEN_BUFFER=1
         RTL_ENABLE_APP_SINGLETON=1
+        RTL_ENABLE_CHRONO_CLOCK=0
         RTL_ENABLE_HEAP=1
         RTL_ENABLE_MEMSET=0
         RTL_ENABLE_OPENCL=0
@@ -63,12 +64,12 @@ target_compile_definitions(${PROJECT_NAME}
         UNICODE
 )
 
-target_include_directories(${PROJECT_NAME} 
+target_include_directories(${PROJECT_NAME}
     PRIVATE 
         src
 )
 
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${PROJECT_NAME}
     rtl::rtl
 )
 
@@ -82,7 +83,7 @@ if(MSVC)
     )
 
     # TODO: Import some flags from RTL library
-    target_compile_options(${PROJECT_NAME} 
+    target_compile_options(${PROJECT_NAME}
         PRIVATE
             /EHa-       # Disable standard C++ stack unwinding. 
             /EHs-       # Disable C++ exception handling (no SEH exceptions).
@@ -146,7 +147,7 @@ endif()
 # Typical segment names
 ###################################################################################################
 #
-# .text: Code 
+# .text: Code
 # .data: Initialized data
 # .bss: Uninitialized data
 # .rdata: Const/read-only (and initialized) data
