@@ -23,7 +23,7 @@
 
 #include "resources/gallery.hpp"
 
-using rtl::application;
+using rtl::Application;
 using namespace rtl::keyboard;
 using namespace rtl::chrono;
 
@@ -44,7 +44,7 @@ static unsigned g_iteration_count{ 0 };
 static thirds      g_image_time_to_change{ 0 };
 static fjord::Size g_image_size;
 
-using TextLocation = application::output::osd::location;
+using TextLocation = Application::Output::OSD::Location;
 
 static constexpr seconds viewing_timeout{ 5 };
 static constexpr bool    stop_after_decoding = FJORD_ENABLE_STOP_AFTER_DECODING;
@@ -59,29 +59,29 @@ void main()
     g_gallery = new Gallery;
     g_picture = new Picture( g_gallery->picture() );
 
-    application::instance().run(
+    Application::instance().run(
         L"fjord",
         nullptr,
-        []( const application::environment&, const application::input& )
+        []( const Application::Environment&, const Application::Input& )
         {
             g_picture->data.reset();
         },
-        []( const application::input& input, application::output& output )
+        []( const Application::Input& input, Application::Output& output )
         {
             bool reload_picture = false;
             bool next_picture = false;
 
-            if ( input.keys.pressed[keys::escape] )
+            if ( input.keys.pressed[Keys::escape] )
             {
-                return application::action::close;
+                return Application::Action::close;
             }
 #if RTL_ENABLE_APP_RESIZE
-            else if ( input.keys.pressed[keys::enter] )
+            else if ( input.keys.pressed[Keys::enter] )
             {
-                return application::action::toggle_fullscreen;
+                return Application::Action::toggle_fullscreen;
             }
 #endif
-            else if ( input.keys.pressed[keys::space] )
+            else if ( input.keys.pressed[Keys::space] )
             {
                 next_picture = true;
                 reload_picture = true;
@@ -131,10 +131,10 @@ void main()
                 // TODO: run iterating stage in the separate thread, blit when ready
                 g_decoder.decode( 1,
                                   fjord::Decoder::PixelFormat::rgb888,
-                                  input.screen.pixels,
+                                  input.screen.pixels_buffer_pointer,
                                   input.screen.width,
                                   input.screen.height,
-                                  input.screen.pitch );
+                                  input.screen.pixels_buffer_pitch );
 
                 if ( g_iteration < g_iteration_count )
                     g_iteration++;
@@ -170,7 +170,7 @@ void main()
                 rtl::wsprintf_s( output.osd.text[(size_t)TextLocation::bottom_left], u8"No data" );
             }
 
-            return application::action::none;
+            return Application::Action::none;
         },
         nullptr );
 }
